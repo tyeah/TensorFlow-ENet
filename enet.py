@@ -389,6 +389,7 @@ def ENet(inputs,
          batch_size,
          num_initial_blocks=1,
          stage_two_repeat=2,
+         num_embedding=0,
          skip_connections=True,
          reuse=None,
          is_training=True,
@@ -484,6 +485,10 @@ def ENet(inputs,
             #=============FINAL CONVOLUTION=============
             logits = slim.conv2d_transpose(net, num_classes, [2,2], stride=2, scope='fullconv')
             probabilities = tf.nn.softmax(logits, name='logits_to_softmax')
+
+            if num_embedding > 0:
+                embedding = slim.conv2d_transpose(net, num_embedding, [2,2], stride=2, scope='fullconv_feat')
+                return logits, probabilities, embedding
 
         return logits, probabilities
 
